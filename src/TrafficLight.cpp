@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include "TrafficLight.h"
+#include <thread>
 
 /* Implementation of class "MessageQueue" */
 
@@ -40,21 +41,56 @@ TrafficLightPhase TrafficLight::getCurrentPhase()
 {
     return _currentPhase;
 }
-
+*/
 void TrafficLight::simulate()
 {
     // FP.2b : Finally, the private method „cycleThroughPhases“ should be started in a thread when the public method „simulate“ is called. To do this, use the thread queue in the base class. 
+    for (auto &thread : threads){
+        //do something
+        std::cout << "Startup TrafficLight" << std::endl;
+        cycleThroughPhases();
+    }
 }
 
-*/
 
-/*
+
+
 // virtual function which is executed in a thread
 void TrafficLight::cycleThroughPhases()
 {
-    // FP.2a : Implement the function with an infinite loop that measures the time between two loop cycles 
-    // and toggles the current phase of the traffic light between red and green and sends an update method 
-    // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
-    // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
+    // FP.2a : Implement the function with an infinite loop that measures the time between two loop cycles check
+    // and toggles the current phase of the traffic light between red and green check
+    // and sends an update method to the message queue using move semantics.
+    // The cycle duration should be a random value between 4 and 6 seconds. check
+    // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. check
+
+    clock_t t_start;
+    clock_t t_end;
+    int duration;
+    int cycle_duration;
+
+    while (true){ //infinite loop
+        t_start = clock();
+
+        // Change color
+        if (_currentPhase == TrafficLightPhase::red){
+            _currentPhase = TrafficLightPhase::green;
+        } else {
+            _currentPhase = TrafficLightPhase::red;
+        }
+
+        // set duration between 4 and 6 seconds
+        cycle_duration = rand()%2000+4000;
+        t_end = clock();
+
+        // wait till cycle_duration
+        duration = (t_end-t_start)/ (CLOCKS_PER_SEC/1000); //in ms
+        if (duration < cycle_duration){
+            std::this_thread::sleep_for(std::chrono::seconds(cycle_duration-duration));
+
+        }
+
+        // wait between cycles
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
 }
-*/
