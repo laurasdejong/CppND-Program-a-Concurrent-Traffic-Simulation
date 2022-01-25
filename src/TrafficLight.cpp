@@ -117,7 +117,7 @@ void TrafficLight::cycleThroughPhases()
         // wait till cycle_duration
         duration = (t_end-t_start)/ (CLOCKS_PER_SEC/1000); //in ms
         if (duration < cycle_duration){
-            std::this_thread::sleep_for(std::chrono::seconds(cycle_duration-duration));
+            std::this_thread::sleep_for(std::chrono::milliseconds(cycle_duration-duration));
 
         }
 
