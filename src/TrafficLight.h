@@ -26,7 +26,7 @@ public:
 
 
 private:
-    std::deque<TrafficLightPhase> _queue;
+    std::deque<TrafficLightPhase> _queue; //in assignment 3, I think it should be deque<T>
     std::condition_variable _condition;
     std::mutex _mutex;
 
@@ -60,6 +60,7 @@ private:
     // FP.4b : create a private member of type MessageQueue for messages of type TrafficLightPhase 
     // and use it within the infinite loop to push each new TrafficLightPhase into it by calling 
     // send in conjunction with move semantics.
+    MessageQueue<TrafficLightPhase> _messages;
 
     std::condition_variable _condition;
     std::mutex _mutex;
