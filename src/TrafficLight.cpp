@@ -77,12 +77,9 @@ TrafficLightPhase TrafficLight::getCurrentPhase()
 
 void TrafficLight::simulate()
 {
+    std::cout << "Startup TrafficLights with number of threads" << threads.size()<<std::endl;
     // FP.2b : Finally, the private method „cycleThroughPhases“ should be started in a thread when the public method „simulate“ is called. To do this, use the thread queue in the base class. 
-    for (auto &thread : threads){
-        //do something
-        std::cout << "Startup TrafficLight" << std::endl;
-        cycleThroughPhases();
-    }
+    threads.emplace_back(std::thread(&TrafficLight::cycleThroughPhases,this));
 }
 
 // virtual function which is executed in a thread
