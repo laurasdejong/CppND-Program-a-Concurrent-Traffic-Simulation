@@ -9,11 +9,13 @@
 // forward declarations to avoid include cycle
 class Vehicle;
 
+enum TrafficLightPhase { red, green };
 
-// FP.3 Define a class „MessageQueue“ which has the public methods send and receive.
-// Send should take an rvalue reference of type TrafficLightPhase whereas receive should return this type. 
-// Also, the class should define an std::dequeue called _queue, which stores objects of type TrafficLightPhase. 
-// Also, there should be an std::condition_variable as well as an std::mutex as private members. 
+
+// FP.3 Define a class „MessageQueue“ which has the public methods send and receive. check
+// Send should take an rvalue reference of type TrafficLightPhase whereas receive should return this type. check
+// Also, the class should define an std::dequeue called _queue, which stores objects of type TrafficLightPhase.check
+// Also, there should be an std::condition_variable as well as an std::mutex as private members. check
 
 template <class T>
 class MessageQueue
@@ -24,7 +26,9 @@ public:
 
 
 private:
-    std::deque<TrafficLight> _queue;
+    std::deque<TrafficLightPhase> _queue;
+    std::condition_variable _condition;
+    std::mutex _mutex;
 
 };
 
@@ -37,7 +41,6 @@ private:
 class TrafficLight: public TrafficObject
 {
 public:
-    enum TrafficLightPhase { red, green };
     // constructor / desctructor
     // TrafficLight()
 
