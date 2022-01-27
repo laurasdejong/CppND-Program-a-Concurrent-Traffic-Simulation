@@ -14,13 +14,14 @@ T MessageQueue<T>::receive()
     // The received object should then be returned by the receive function. 
 
     std::unique_lock<std::mutex> uLock(_mutex);
-        _condition.wait(uLock, [this] { return !_queue.empty(); }); // pass unique lock to condition variable
+    _condition.wait(uLock, [this] { return !_queue.empty(); }); // pass unique lock to condition variable
+    std::cout << "que of traffic light signs:" << _queue.size()<<std::endl;
 
         // remove last vector element from queue
-        T msg = std::move(_queue.back());
-        _queue.pop_back();
+    T msg = std::move(_queue.back());
+    _queue.clear();
 
-        return msg; // w
+    return msg;
 
 
 }
@@ -36,7 +37,7 @@ void MessageQueue<T>::send(T &&msg)
     std::lock_guard<std::mutex> uLock(_mutex);
 
     // add vector to queue
-    std::cout << "   Message " << msg << " has been sent to the queue" << std::endl;
+    // std::cout << "   Message " << msg << " has been sent to the queue" << std::endl;
     _queue.push_back(std::move(msg));
     _condition.notify_one(); // notify client
 
