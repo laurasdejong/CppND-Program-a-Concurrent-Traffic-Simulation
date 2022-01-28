@@ -32,18 +32,13 @@ void MessageQueue<T>::send(T &&msg)
     // FP.4a : The method send should use the mechanisms std::lock_guard<std::mutex> check
     // as well as _condition.notify_one() to add a new message to the queue and afterwards send a notification. check
 
-
     // perform vector modification under the lock
     std::lock_guard<std::mutex> uLock(_mutex);
+    _queue.clear(); // remove buildup
 
     // add vector to queue
-    // std::cout << "   Message " << msg << " has been sent to the queue" << std::endl;
-    _queue.push_back(std::move(msg));
+    _queue.emplace_back(msg);
     _condition.notify_one(); // notify client
-
-    //     std::deque<TrafficLightPhase> _queue;
-    // std::condition_variable _condition;
-    // std::mutex _mutex;
 
 }
 
