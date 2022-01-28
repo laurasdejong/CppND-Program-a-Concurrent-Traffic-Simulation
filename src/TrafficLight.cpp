@@ -60,7 +60,6 @@ void TrafficLight::waitForGreen()
     {
         TrafficLightPhase message = _messages.receive();
         if (message == TrafficLightPhase::green){
-            std::cout << "green!" << std::endl;
             return;
         }
     }
@@ -87,37 +86,34 @@ void TrafficLight::cycleThroughPhases()
     // The cycle duration should be a random value between 4 and 6 seconds. check
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. check
 
-    clock_t t_start;
-    clock_t t_end;
+    // clock_t t_start;
     int duration;
-    int cycle_duration;
+    int cycle_duration = rand()%2000+4000;
+    std::chrono::time_point<std::chrono::system_clock> t_start;
+    t_start = std::chrono::system_clock::now();
 
     while (true){ //infinite loop
-        t_start = clock();
-
-        // Change color
-        if (_currentPhase == TrafficLightPhase::red){
-            _currentPhase = TrafficLightPhase::green;
-        } else {
-            _currentPhase = TrafficLightPhase::red;
-        }
-
-        //Send update
-        // wss fout, want move currenPhase, dus dan is die leeg de tweede loop. Wss de if els vervangen door een vlag? wel llekker lui...
-        _messages.send(std::move(_currentPhase));
-
-        // set duration between 4 and 6 seconds
-        cycle_duration = rand()%2000+4000;
-        t_end = clock();
-
-        // wait till cycle_duration
-        duration = (t_end-t_start)/ (CLOCKS_PER_SEC/1000); //in ms
-        if (duration < cycle_duration){
-            std::this_thread::sleep_for(std::chrono::milliseconds(cycle_duration-duration));
-
-        }
-
         // wait between cycles
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+
+        long t_delta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - t_start).count();
+        if (t_delta >= cycle_duration){
+
+            // Change color
+            if (_currentPhase == TrafficLightPhase::red){
+                _currentPhase = TrafficLightPhase::green;
+            } else {
+                _currentPhase = TrafficLightPhase::red;
+            }
+
+            //Send update
+            _messages.send(std::move(_currentPhase));
+
+            // get new cycle time and t_start
+            cycle_duration = rand()%2000+4000;
+            t_start = std::chrono::system_clock::now();
+
+        }
     }
 }
